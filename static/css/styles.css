@@ -1,0 +1,11 @@
+
+.playfair-display-body {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 400; /* 400 to 900  */
+  font-style: normal;
+}
+
+body {
+    font-family: "Playfair Display", serif;
+}
