@@ -1,39 +1,70 @@
 {% extends "base.html" %}
-
 {% load allauth i18n %}
-{% block head_title %}
-    {% trans "Signup" %}
-{% endblock head_title %}
+
+
 {% block content %}
-    {% element h1 %}
-        {% trans "Sign Up" %}
-    {% endelement %}
-    {% setvar link %}
-        <a href="{{ login_url }}">
-        {% endsetvar %}
-        {% setvar end_link %}
-        </a>
-    {% endsetvar %}
-    {% element p %}
-        {% blocktranslate %}Already have an account? Then please {{ link }}sign in{{ end_link }}.{% endblocktranslate %}
-    {% endelement %}
-    {% if not SOCIALACCOUNT_ONLY %}
-        {% url 'account_signup' as action_url %}
-        {% element form form=form method="post" action=action_url tags="entrance,signup" %}
-            {% slot body %}
-                {% csrf_token %}
-                {% element fields form=form unlabeled=True %}
-                {% endelement %}
-                {{ redirect_field }}
-            {% endslot %}
-            {% slot actions %}
-                {% element button tags="prominent,signup" type="submit" %}
-                    {% trans "Sign Up" %}
-                {% endelement %}
-            {% endslot %}
-        {% endelement %}
-    {% endif %}
-    {% if SOCIALACCOUNT_ENABLED %}
-        {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
-    {% endif %}
+
+    <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
+        <!-- card -->
+        <div class="card card shadow p-3" style="border-radius: 10px;">
+
+            
+              <h1 class="centered mb-3">Sign Up</h1>
+            
+
+            {% setvar link %}
+                <a href="{{ login_url }}">
+                {% endsetvar %}
+                {% setvar end_link %}
+                </a>
+            {% endsetvar %}
+            {% element p %}
+                {% blocktranslate %}Already have an account? Then please {{ link }}sign in{{ end_link }}.{% endblocktranslate %}
+            {% endelement %}
+
+            {% if not SOCIALACCOUNT_ONLY %}
+                {% url 'account_signup' as action_url %}
+
+                <!-- beginning of form -->
+                <div class="form-group">
+
+                    {% element form form=form method="post" action=action_url tags="entrance,signup" %}
+
+                        {% slot body %}
+                            {% csrf_token %}
+                            {% element fields form=form unlabeled=True %}
+                            {% endelement %}
+                            {{ redirect_field }}
+                        {% endslot %}
+
+                        
+                            {% slot actions %}
+                                
+                                <button type="submit" class="btn btn-primary w-100">
+                                    {% trans "Sign Up" %}
+                                </button>
+                        
+                            {% endslot %}
+                  
+
+                    {% endelement %}
+
+            </div>
+            {% endif %}
+
+            {% if SOCIALACCOUNT_ENABLED %}
+    
+                    <hr>
+                    <h1 class="centered ts-3" style="font-size: 1.5rem !important;">Or</h1>
+                    <hr>
+                    <a class="google-button mt-3" title="Google" href="/users/accounts/google/login/?process=login">
+                        <img class="pr-3" style="object-fit: cover;" src="/static/images/google-icon.png">
+                        <p class="mt-3 text-dark">Sign in with Google</p>
+                    </a>
+              
+            {% endif %}
+
+            <!-- end card -->
+        </div>
+    </div>
 {% endblock content %}

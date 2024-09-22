@@ -4,8 +4,10 @@
 
 {% block content%}
 
-<h1>Sample homepage</h1>
-<a href={% url 'account_signup'%} class="btn btn-primary">signup?</a>
-<a href={% url 'account_login'%} class="btn btn-primary">login?</a>
+<div class="container">
+    <h1>Sample homepage</h1>
+    <a href={% url 'account_signup'%} class="btn btn-primary">signup?</a>
+    <a href={% url 'account_login'%} class="btn btn-primary">login?</a>
+</div>
 
 {% endblock %}

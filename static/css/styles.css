@@ -7,5 +7,27 @@
 }
 
 body {
-    font-family: "Playfair Display", serif;
+  font-family: "Playfair Display", serif;
+}
+
+.centered {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
+.google-button {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+
+  border: 2px solid black;
+  padding: 10px;                  
+  border-radius: 20px;    
+}
+
+a.google-button {
+  text-decoration: none;
+  cursor: pointer; /* Change the cursor to a pointing hand */
+
 }
