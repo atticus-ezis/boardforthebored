@@ -6,7 +6,7 @@
 
     <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
         <!-- card -->
-        <div class="card card shadow p-3" style="border-radius: 10px;">
+        <div class="card card shadow p-3" style="border-radius: 10px;" id="cardElement">
 
             
               <h1 class="centered mb-3">Sign Up</h1>
@@ -67,4 +67,17 @@
             <!-- end card -->
         </div>
     </div>
+    
+    <script>
+        window.onload = function() {
+            document.addEventListener('click', function(event) {
+                const card = document.getElementById('cardElement')
+                if (!card.contains(event.target)) {
+                    history.back();
+                }
+            })
+        }
+
+    </script>
+
 {% endblock content %}

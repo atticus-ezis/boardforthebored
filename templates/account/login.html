@@ -11,7 +11,7 @@
 
 <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100vh;">
 
-    <div class="card card shadow p-3" style="border-radius: 10px;">
+    <div class="card card shadow p-3" id="cardElement" style="border-radius: 10px;">
 
        <h1 class="centered mb-3">Login</h1>
 
@@ -75,6 +75,20 @@
 
            
         {% endif %}
+
+        <!-- script to click off -->
+        <script>
+            window.onload = function() { 
+                document.addEventListener('click', function(event) {
+                    const card = document.getElementById('cardElement');
+                    
+                    // Check if the click is outside the card
+                    if (!card.contains(event.target)) {
+                        history.back();  // Go to the previous page
+                    }
+                });
+        }
+        </script>
     {% endblock content %}
 
     {% block extra_body %}
@@ -85,4 +99,6 @@
 
     </div>
 </div>
+
+
 {% endblock %}
