@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 
     # API 
     'rest_framework',
+    'django_filters',
 
     # Project Apps
     'Users',
@@ -56,6 +57,10 @@ INSTALLED_APPS = [
     'crispy_forms',
     
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

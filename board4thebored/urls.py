@@ -20,8 +20,8 @@ from .views import index_view, test_index_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),
     path('users/', include('Users.urls')),
+    path('events/', include('Events.urls')),
     path('', index_view),
     path('test/', test_index_view),
 ]
