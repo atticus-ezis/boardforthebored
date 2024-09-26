@@ -1,13 +1,41 @@
-from django.shortcuts import render
-from rest_framework import generics
-from .models import Event
-from .serializers import EventSerializer
-from django_filters.rest_framework import DjangoFilterBackend
 import requests
-from django.http import JsonResponse
-from django.conf import settings
+import os
 
-EVENTBRITE_API_KEY = 'your_eventbrite_api_key'
+from django.shortcuts import render
+from .models import *
+from django.http import JsonResponse
+
+
+
+# pass city submit to api
+def search_events(request):
+    events = []
+    if request.method == 'POST':
+        form = CitySearch(request.POST)
+        if form.is_valid():
+            city = form.cleaned_data['city']
+            events = get_events_by_city(city)  # Fetch events using API
+    else:
+        form = CitySearch()
+
+    return render(request, 'events/explore_events.html', {'form': form, 'events': events})
+
+# api connection 
+def get_events_by_city(city):
+    api_key = os.getenv('TICKETMASTER_API_KEY')
+    url = f"https://app.ticketmaster.com/discovery/v2/events.json"
+    params = {
+        'apikey': api_key,
+        'city': city, 
+        'includeSpellcheck':'yes',
+        'radius': '50',
+        'unit': 'miles',
+        'size': 10,  # Number of events to fetch (you can change this)
+    }
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        return response.json().get('_embedded', {}).get('events', [])
+    return []
 
 def Explore(request):
     return render(request, 'explore_events.html')
@@ -18,14 +46,14 @@ def get_events(request):
     location = request.GET.get('location')
 
     # Define the base URL for the external API
-    eventbrite_url = 'https://www.eventbriteapi.com/v3/events/search/'
+    eventbrite_url = 'https://www.eventbriteapi.com/v3/users/me/?token=77QGPDDQ6HHOKSY3SAO2'
 
     # Define the API query parameters
     params = {
         'q': 'events',
         'location.address': location,
         'start_date.range_start': f'{date}T00:00:00',
-        'token': EVENTBRITE_API_KEY,
+        'token': '',
     }
 
     # Make the request to the external API
@@ -40,9 +68,7 @@ def get_events(request):
     else:
         # Handle errors, return an appropriate error message
         return JsonResponse({'error': 'Unable to fetch events'}, status=response.status_code)
+    
 
-class EventListView(generics.ListAPIView):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['date', 'location']
+
+
