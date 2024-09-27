@@ -3,6 +3,35 @@
 
 {% block content %}
 
-<h1>explore events</h1>
+<h1>Explore Events</h1>
+
+<!-- enter city -->
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-primary" type="submit">Search</button>
+</form>
+
+<br>
+
+<!-- results -->
+{% if events %}
+    <ul>
+        {% for event in events %}
+            <li>
+                <h3>{{ event.name }}</h3>
+                <img src="{{ event.image_url }}" alt="{{ event.name }} image" width="300px">
+                <p>Date: {{ event.dates.start.localDate }}</p>
+                <p>Venue: {{ event.venue_name }}</p>
+                <p>City: {{ event.venue_city }}</p>
+                <a href="{{ event.url }}" target="_blank">More Info / Buy Tickets</a>
+            </li>
+
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No events found</p>
+{% endif %}
+
 
 {% endblock content %}

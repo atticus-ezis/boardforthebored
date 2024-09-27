@@ -153,7 +153,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# ALl auth dependecies
+# All auth dependecies
 
 SITE_ID = 1
 ACCOUNT_LOGOUT_ON_GET = True
