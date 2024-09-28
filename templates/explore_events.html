@@ -21,10 +21,17 @@
             <li>
                 <h3>{{ event.name }}</h3>
                 <img src="{{ event.image_url }}" alt="{{ event.name }} image" width="300px">
-                <p>Date: {{ event.dates.start.localDate }}</p>
-                <p>Venue: {{ event.venue_name }}</p>
+                
+                  
+                <p>Date:
+                    {% for date in event.dates %}
+                        {{ date }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p> 
+
+                <p>Venue: {{ event.venue }}</p>
                 <p>City: {{ event.venue_city }}</p>
-                <a href="{{ event.url }}" target="_blank">More Info / Buy Tickets</a>
+                <a href="{{ event.info }}" target="_blank">More Info / Buy Tickets</a>
             </li>
 
         {% endfor %}

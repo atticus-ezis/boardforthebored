@@ -21,6 +21,7 @@ def search_city(request):
 
 # api connection 
 def get_events_by_city(city):
+    events_dict = {}
     api_key = os.getenv('TICKETMASTER_API_KEY')
     url = f"https://app.ticketmaster.com/discovery/v2/events.json"
     params = {
@@ -34,7 +35,10 @@ def get_events_by_city(city):
     response = requests.get(url, params=params)
     if response.status_code == 200:
         events = response.json().get('_embedded', {}).get('events', [])
+
         for event in events:
+            event_date = event.get('dates', {}).get('start', {}).get('localDate', [])
+        
             images = event.get('images', [])
             if images:
                 event['image_url'] = images[0]['url']
@@ -43,7 +47,43 @@ def get_events_by_city(city):
                 venue = event['_embedded']['venues'][0]
                 event['venue_name'] = venue.get('name', 'Unlisted')
                 event['venue_city'] = venue.get('city', {}).get('name', 'Unlisted')
-        return events
+
+            # append events to events_dict with unique names 
+
+            if event['name'] not in events_dict:
+                events_dict[event['name']] = {
+                    'name':event['name'], 
+                    'image_url':event['image_url'], 
+                    'dates':[event_date],
+                    'venue':event['venue_name'], 
+                    'venue_city':event['venue_city'], 
+                    'info':event['url'],
+                }
+
+            # append date to duplicate names
+
+            else:
+            # Append the new date if it's not already in the list
+                if event_date and event_date not in events_dict[event['name']]['dates']:
+                    events_dict[event['name']]['dates'].append(event_date)
+
+        event_list = [
+             {
+                'name':event_data['name'], 
+                'image_url':event_data['image_url'], 
+                'dates':event_data['dates'], 
+                'venue':event_data['venue'], 
+                'venue_city':event_data['venue_city'], 
+                'info':event_data['info'], 
+             }
+
+             for event_data in events_dict.values() 
+        ]
+
+
+
+        return event_list 
+    
     return []
 
 

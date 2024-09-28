@@ -23,5 +23,5 @@ urlpatterns = [
     path('users/', include('Users.urls')),
     path('events/', include('Events.urls')),
     path('', index_view),
-    path('test/', test_index_view),
+    path('test/', test_index_view, name="home"),
 ]
