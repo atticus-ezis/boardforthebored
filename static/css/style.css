@@ -16,6 +16,7 @@ body {
   justify-content: center;
 }
 
+
 .google-button {
   display: flex;
   align-content: center;
@@ -865,3 +866,13 @@ a:focus {
 
 /* end footer section*/
 /*# sourceMappingURL=style.css.map */
+
+
+.custom-search-bar {
+  flex-grow: 1;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box; /* Ensures padding doesn't overflow the width */
+}
+

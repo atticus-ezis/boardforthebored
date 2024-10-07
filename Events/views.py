@@ -3,6 +3,8 @@ import os
 
 from django.shortcuts import render
 from .models import *
+from .forms import CitySearch
+
 from django.http import JsonResponse
 
 
@@ -19,8 +21,11 @@ def search_city(request):
         
     return render(request, 'explore_events.html', {'form':form, 'events':events})
 
-# api connection 
+# get api data
 def get_events_by_city(city):
+
+    # connect to api
+
     events_dict = {}
     api_key = os.getenv('TICKETMASTER_API_KEY')
     url = f"https://app.ticketmaster.com/discovery/v2/events.json"
@@ -34,7 +39,9 @@ def get_events_by_city(city):
     }
     response = requests.get(url, params=params)
     if response.status_code == 200:
-        events = response.json().get('_embedded', {}).get('events', [])
+        events = response.json().get('_embedded', {}).get('events', []) #return JSON data as dictionary
+
+        # clean data    
 
         for event in events:
             event_date = event.get('dates', {}).get('start', {}).get('localDate', [])
@@ -48,7 +55,7 @@ def get_events_by_city(city):
                 event['venue_name'] = venue.get('name', 'Unlisted')
                 event['venue_city'] = venue.get('city', {}).get('name', 'Unlisted')
 
-            # append events to events_dict with unique names 
+            # append events to dict with unique names 
 
             if event['name'] not in events_dict:
                 events_dict[event['name']] = {
@@ -59,8 +66,6 @@ def get_events_by_city(city):
                     'venue_city':event['venue_city'], 
                     'info':event['url'],
                 }
-
-            # append date to duplicate names
 
             else:
             # Append the new date if it's not already in the list
@@ -79,8 +84,6 @@ def get_events_by_city(city):
 
              for event_data in events_dict.values() 
         ]
-
-
 
         return event_list 
     

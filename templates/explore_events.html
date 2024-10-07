@@ -3,42 +3,48 @@
 
 {% block content %}
 
-<h1>Explore Events</h1>
+<div class="position-relative p-5">
+    <div class="d-flex flex-column justify-content-center align-items-center">
 
-<!-- enter city -->
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-primary" type="submit">Search</button>
-</form>
+        <h1 class="">Explore Events</h1>
 
-<br>
+        <!-- enter city form -->
+      
+        <form method="POST" class="d-flex p-4 justify-content-between rounded shadow-lg w-100">
+            {% csrf_token %}
+            {{ form.city }} <!-- add .city to remove conflicting markup -->
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+        <br>
 
-<!-- results -->
-{% if events %}
-    <ul>
-        {% for event in events %}
-            <li>
-                <h3>{{ event.name }}</h3>
-                <img src="{{ event.image_url }}" alt="{{ event.name }} image" width="300px">
-                
-                  
-                <p>Date:
-                    {% for date in event.dates %}
-                        {{ date }}{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                </p> 
+        <!-- results -->
+        {% if events %}
+            <ul>
+                {% for event in events %}
+                    <li>
+                        <h3>{{ event.name }}</h3>
+                        <img src="{{ event.image_url }}" alt="{{ event.name }} image" width="300px">
+                        
+                        
+                        <p>Date:
+                            {% for date in event.dates %}
+                                {{ date }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </p> 
 
-                <p>Venue: {{ event.venue }}</p>
-                <p>City: {{ event.venue_city }}</p>
-                <a href="{{ event.info }}" target="_blank">More Info / Buy Tickets</a>
-            </li>
+                        <p>Venue: {{ event.venue }}</p>
+                        <p>City: {{ event.venue_city }}</p>
+                        <a href="{{ event.info }}" target="_blank">More Info / Buy Tickets</a>
+                    </li>
 
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No events found</p>
-{% endif %}
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No events found</p>
+        {% endif %}
+    </div>
+
+</div>
 
 
 {% endblock content %}
