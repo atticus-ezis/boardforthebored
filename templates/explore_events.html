@@ -3,48 +3,54 @@
 
 {% block content %}
 
-<div class="position-relative p-5">
-    <div class="d-flex flex-column justify-content-center align-items-center">
 
-        <h1 class="">Explore Events</h1>
+    <div class="position-relative p-5">
 
-        <!-- enter city form -->
-      
-        <form method="POST" class="d-flex p-4 justify-content-between rounded shadow-lg w-100">
-            {% csrf_token %}
-            {{ form.city }} <!-- add .city to remove conflicting markup -->
-            <button class="btn btn-primary" type="submit">Search</button>
-        </form>
-        <br>
+        <div class="d-flex flex-column justify-content-center align-items-center">
 
-        <!-- results -->
-        {% if events %}
-            <ul>
-                {% for event in events %}
-                    <li>
-                        <h3>{{ event.name }}</h3>
-                        <img src="{{ event.image_url }}" alt="{{ event.name }} image" width="300px">
-                        
-                        
-                        <p>Date:
-                            {% for date in event.dates %}
-                                {{ date }}{% if not forloop.last %}, {% endif %}
-                            {% endfor %}
-                        </p> 
+            <div class="card w-100 rounded shadow-lg" style="max-width: 700px;">
 
-                        <p>Venue: {{ event.venue }}</p>
-                        <p>City: {{ event.venue_city }}</p>
-                        <a href="{{ event.info }}" target="_blank">More Info / Buy Tickets</a>
-                    </li>
+                <h1 class="card-title text-center mt-3">Explore Events</h1>
 
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No events found</p>
-        {% endif %}
+                <!-- enter city form -->
+            
+                <form method="POST" class="card-body d-flex p-4 justify-content-between" >
+                    {% csrf_token %}
+                    {{ form.city }} <!-- add .city to remove conflicting markup -->
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </form>
+                <br>
+
+            </div>
+
+    
+            <!-- results -->
+            {% if events %}
+                <ul class="">
+                    {% for event in events %}
+                        <li>
+                            <h3>{{ event.name }}</h3>
+                            <img src="{{ event.image_url }}" alt="{{ event.name }} image" width="300px">
+                            
+                            
+                            <p>Date:
+                                {% for date in event.dates %}
+                                    {{ date }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </p> 
+
+                            <p>Venue: {{ event.venue }}</p>
+                            <p>City: {{ event.venue_city }}</p>
+                            <a href="{{ event.info }}" target="_blank">More Info / Buy Tickets</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No events found</p>
+            {% endif %}
+        </div>
     </div>
 
-</div>
 
 
 {% endblock content %}

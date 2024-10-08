@@ -874,5 +874,11 @@ a:focus {
   border: 1px solid #ccc;
   padding: 10px;
   box-sizing: border-box; /* Ensures padding doesn't overflow the width */
+  margin-right: 25px;
+}
+
+.purple-background {
+  background: linear-gradient(135deg,#a454fd, #2b05df);
+
 }
 
