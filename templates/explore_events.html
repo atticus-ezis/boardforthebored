@@ -3,53 +3,64 @@
 
 {% block content %}
 
+<div class="position-relative p-5">
 
-    <div class="position-relative p-5">
+    <div class="d-flex flex-column justify-content-center align-items-center">
 
-        <div class="d-flex flex-column justify-content-center align-items-center">
+        <!-- search city -->
+        <div class="card w-100 rounded shadow-lg" style="max-width: 700px;">
 
-            <div class="card w-100 rounded shadow-lg" style="max-width: 700px;">
+            <h1 class="card-title text-center mt-3">Explore Events</h1>
 
-                <h1 class="card-title text-center mt-3">Explore Events</h1>
+            <form method="POST" class="card-body d-flex p-4 justify-content-between" >
+                {% csrf_token %}
+                {{ form.city }} <!-- add .city to remove conflicting markup -->
+                <button class="btn btn-primary" type="submit">Search</button>
+            </form>
 
-                <!-- enter city form -->
-            
-                <form method="POST" class="card-body d-flex p-4 justify-content-between" >
-                    {% csrf_token %}
-                    {{ form.city }} <!-- add .city to remove conflicting markup -->
-                    <button class="btn btn-primary" type="submit">Search</button>
-                </form>
-                <br>
-
-            </div>
-
-    
-            <!-- results -->
-            {% if events %}
-                <ul class="">
-                    {% for event in events %}
-                        <li>
-                            <h3>{{ event.name }}</h3>
-                            <img src="{{ event.image_url }}" alt="{{ event.name }} image" width="300px">
-                            
-                            
-                            <p>Date:
-                                {% for date in event.dates %}
-                                    {{ date }}{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </p> 
-
-                            <p>Venue: {{ event.venue }}</p>
-                            <p>City: {{ event.venue_city }}</p>
-                            <a href="{{ event.info }}" target="_blank">More Info / Buy Tickets</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No events found</p>
-            {% endif %}
         </div>
+
+        <br>
+
+        <!-- results -->
+        {% if events %}
+            <div class="w-100" style="max-width:700px;">
+                <div class="mt-3 mb-3">
+                    {% for event in events %}
+
+                    <!-- event card -->
+                        <div class="card mb-5">
+
+                            <img class="card-img-top"src="{{ event.image_url }}" alt="{{ event.name }} image">
+
+                            <div class="card-body">
+                                <h3 class="card-title">{{ event.name }}</h3>
+                            
+                                <div class="card-body">
+
+                                    <p class="card-text">Date:
+                                        {% for date in event.dates %}
+                                            {{ date }}{% if not forloop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </p> 
+
+                                    <p class="card-text">Venue: {{ event.venue }}</p>
+                                    <p class="card-text">City: {{ event.venue_city }}</p>
+                                    <a class="btn btn-primary" href="{{ event.info }}" target="_blank">More Info / Buy Tickets</a>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+                    </div>
+            </div>
+        {% else %}
+            <p>No events found</p>
+        {% endif %}
     </div>
+</div>
 
 
 
