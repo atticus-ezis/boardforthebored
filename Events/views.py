@@ -6,6 +6,7 @@ from .models import *
 from .forms import CitySearch
 
 from django.http import JsonResponse
+from collections import defaultdict
 
 
 # pass city submit to api
@@ -15,18 +16,27 @@ def search_city(request):
         form = CitySearch(request.POST)
         if form.is_valid():
             city = form.cleaned_data['city']
+            # get events in city
             events = get_events_by_city(city)
+            # organize events by type
+            grouped_events = get_events_by_type(events)
     else:
         form = CitySearch()
         
-    return render(request, 'explore_events.html', {'form':form, 'events':events})
+    return render(request, 'explore_events.html', {'form':form, 'events':events, 'grouped_events':grouped_events})
 
-# get api data
+# group function of city results
+def get_events_by_type(events):
+    groupby = defaultdict(list)
+    for event in events:
+        groupby[event['class']].append(event) 
+    return dict(groupby)
+
+# get JSON data
 def get_events_by_city(city):
+    events_dict = {}
 
     # connect to api
-
-    events_dict = {}
     api_key = os.getenv('TICKETMASTER_API_KEY')
     url = f"https://app.ticketmaster.com/discovery/v2/events.json"
     params = {
@@ -36,15 +46,21 @@ def get_events_by_city(city):
         'radius': '50',
         'unit': 'miles',
         'size': 10, 
+
     }
+
+    # return JSON data as dictionary
     response = requests.get(url, params=params)
     if response.status_code == 200:
-        events = response.json().get('_embedded', {}).get('events', []) #return JSON data as dictionary
+        events = response.json().get('_embedded', {}).get('events', []) 
 
         # clean data    
-
         for event in events:
+
             event_date = event.get('dates', {}).get('start', {}).get('localDate', [])
+
+            event_type = event['classifications'][0]
+            event['class'] = event_type.get('segment', {}).get('name', 'Unlisted')
         
             images = event.get('images', [])
             if images:
@@ -54,6 +70,7 @@ def get_events_by_city(city):
                 venue = event['_embedded']['venues'][0]
                 event['venue_name'] = venue.get('name', 'Unlisted')
                 event['venue_city'] = venue.get('city', {}).get('name', 'Unlisted')
+            
 
             # append events to dict with unique names 
 
@@ -65,6 +82,8 @@ def get_events_by_city(city):
                     'venue':event['venue_name'], 
                     'venue_city':event['venue_city'], 
                     'info':event['url'],
+                    'id':event['id'],
+                    'class':event['class']
                 }
 
             else:
@@ -80,6 +99,8 @@ def get_events_by_city(city):
                 'venue':event_data['venue'], 
                 'venue_city':event_data['venue_city'], 
                 'info':event_data['info'], 
+                'id':event_data['id'],
+                'class':event_data['class'],
              }
 
              for event_data in events_dict.values() 

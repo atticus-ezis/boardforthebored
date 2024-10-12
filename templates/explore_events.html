@@ -26,10 +26,34 @@
         {% if events %}
             <div class="w-100" style="max-width:700px;">
                 <div class="mt-3 mb-3">
-                    {% for event in events %}
 
+                    <!-- define key + value items from tuple -->
+                    {% for class, event_lists in grouped_events.items %}
+
+                        <!-- key -->
+                        <h1>{{class|title}}</h1>
+
+                        <!-- iterate through values -->
+
+                        <ul>
+                            {% for event_list in event_lists %} 
+                                <li>{{event_list.name}}</li>
+                            {% endfor %}                 
+                        </ul>
+
+                    {% endfor %}
+                    
+                    <!-- group event info by type -->
+                    <h1>grouped data</h1>
+                    <p>{{grouped_events}}</p>
+
+
+                    
+
+                    {% for event in events %}
+                     
                     <!-- event card -->
-                        <div class="card mb-5">
+                        <div class="card mb-3 shadow-lg">
 
                             <img class="card-img-top"src="{{ event.image_url }}" alt="{{ event.name }} image">
 
@@ -43,6 +67,8 @@
                                             {{ date }}{% if not forloop.last %}, {% endif %}
                                         {% endfor %}
                                     </p> 
+                                    <p>ID:{{ event.id }}</p>
+                                    <p class="card-text">Type:{{ event.class }}</p>
 
                                     <p class="card-text">Venue: {{ event.venue }}</p>
                                     <p class="card-text">City: {{ event.venue_city }}</p>
