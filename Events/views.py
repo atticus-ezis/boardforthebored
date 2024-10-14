@@ -23,7 +23,7 @@ def search_city(request):
     else:
         form = CitySearch()
         
-    return render(request, 'explore_events.html', {'form':form, 'events':events, 'grouped_events':grouped_events})
+    return render(request, 'explore_events.html', {'form':form, 'grouped_events':grouped_events})
 
 # group function of city results
 def get_events_by_type(events):
@@ -107,7 +107,7 @@ def get_events_by_city(city):
         ]
 
         return event_list 
-    
+
     return []
 
 

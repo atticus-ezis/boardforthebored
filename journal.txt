@@ -1,0 +1,13 @@
+ - align result cards horizontally
+ - create clickable carousel
+ - rank by date 
+ - restrict api results to 3 events per class 
+ - display all available classes
+ - create filter for class
+ - create filter for date range 
+ - price filter 
+ - age restriction filter
+ - create generic search for event name
+ - decorate 
+ 
+
