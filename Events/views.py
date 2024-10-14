@@ -12,6 +12,7 @@ from collections import defaultdict
 # pass city submit to api
 def search_city(request):
     events = []
+    grouped_events = []
     if request.method == 'POST':
         form = CitySearch(request.POST)
         if form.is_valid():

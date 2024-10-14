@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "boot_base.html" %}
 {% load static %}
 
 {% block content %}
@@ -38,16 +38,16 @@
                     <!-- carousel content-->
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <div class="d-flex justify-content-start" style="gap:20px; overflow-x: hidden;">
+                            <div class="d-flex justify-content-start" style="gap:20px; overflow-x: scroll;">
 
                                 <!-- cards -->
                                 {% for event in event_lists %} 
                                     <!-- event card -->
                                     <div class="card shadow-lg" style="width: 400px; height: auto; flex-shrink: 0;">
                                         
-                                        <img class="card-img-top"src="{{ event.image_url }}" alt="{{ event.name }} image" style="width: 400px; height: 400px;">
+                                        <img class="card-img-top"src="{{ event.image_url }}" alt="{{ event.name }} image" style="width: 100%; height: auto;">
 
-                                        <div class="card-body" >
+                                        <div class="card-body">
                                             <h3 class="card-title">{{ event.name }}</h3>
                                         
                                             <div class="card-body" style="width: 400px;">
