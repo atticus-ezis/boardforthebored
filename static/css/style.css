@@ -886,3 +886,11 @@ a:focus {
   max-width: 700px;
 }
 
+.fixed-ratio-img {
+  width: 100%;              /* Make the image fill the width of its container */
+  height: auto;             /* Maintain the aspect ratio */
+  max-height: 200px;        /* Optional: Set a max height to control size */
+  object-fit: cover;        /* Ensure the image fills the container without distorting */
+}
+
+

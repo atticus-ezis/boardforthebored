@@ -4,14 +4,14 @@
 {% block content %}
 
 <!-- responsive width -->
-<div class="container my-4">
+<div class="container my-4 d-flex flex-column justify-content-center align-items-center">
     <!-- center children and stack vertically-->
-    <div class="d-flex flex-column justify-content-center align-items-center">
+    <div style="max-width: 700px;">
         <!-- Header -->
         <h1 class="panel-title">Explore Events</h1>
 
         <!-- searchbar form for city -->
-        <div class="card w-100 rounded shadow-lg" style="max-width: 700px;">
+        <div class="card w-100 rounded shadow-lg">
             
             <form method="POST" class="card-body d-flex p-4 justify-content-between" > <!-- search bar and button take up entire space-->
                 {% csrf_token %}
@@ -28,75 +28,45 @@
         <!---->
        
         {% for class, event_lists in grouped_events.items %}  <!-- define key + values from created tuple -->
-        <!-- Events subject title pushed left -->
-        <h1 class="panel-title my-4 me-auto">{{ class|title }}</h1>
-      
-        <!-- results container -->
-        <div class="container"> 
-          <!-- carousel wrapper -->
-          <div id="cardCarousel_{{ forloop.counter }}" class="carousel slide" data-bs-ride="carousel">
-            <!-- carousel content -->
-            <div class="carousel-inner">
-              {% for event in event_lists %}
-                {% if forloop.first or forloop.counter0|divisibleby:3 %}
-                  <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                    <!-- place items in row -->
-                    <div class="row">
-                {% endif %}
-                
-                      <!-- Individual card -->
-                      <div class="col-md-4">
+            <!-- Events subject title pushed left -->
+            <h1 class="panel-title my-4 me-auto">{{ class|title }}</h1>
+            <!-- results container -->
+            <div class="row flex-nowrap w-100" style="overflow-x: auto;"> 
+                {% for event in event_lists %}
+                    <div class="card my-5" style="max-width: 400px;">
                         <!-- create event card -->
                         <div class="card shadow">
-                          <!-- card image -->
-                          <img class="card-img-top" src="{{ event.image_url }}" alt="{{ event.name }} image" style="width: 100%; height: auto;">
-                          <!-- card info -->
-                          <div class="card-body">
-                            <!-- title -->
-                            <h3 class="card-title">{{ event.name }}</h3>
-                            <!-- card body -->
-                            <div class="card-body" style="width: 400px;">
-                              <p class="card-text">Date:
-                                <!-- display multiple dates and exclude ',' from last date -->
-                                {% for date in event.dates %}
-                                  {{ date }}{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                              </p> 
-                              <p>ID: {{ event.id }}</p>
-                              <p class="card-text">Type: {{ event.class }}</p>
-                              <p class="card-text">Venue: {{ event.venue }}</p>
-                              <p class="card-text">City: {{ event.venue_city }}</p>
-                              <a class="btn btn-primary" href="{{ event.info }}" target="_blank">More Info / Buy Tickets</a>
+                            <!-- card image -->
+                            <img class="card-img-top fixed-ratio-img" src="{{ event.image_url }}" alt="{{ event.name }} image">
+                            <!-- card info -->
+                            <div class="card-body">
+                                <!-- title -->
+                                <h3 class="card-title">{{ event.name }}</h3>
+                                <!-- card body -->
+                                <div class="card-body w-100">
+                                <p class="card-text">Date:
+                                    <!-- display multiple dates and exclude ',' from last date -->
+                                    {% for date in event.dates %}
+                                    {{ date }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </p> 
+                                <p>ID: {{ event.id }}</p>
+                                <p class="card-text">Type: {{ event.class }}</p>
+                                <p class="card-text">Venue: {{ event.venue }}</p>
+                                <p class="card-text">City: {{ event.venue_city }}</p>
+                                <a class="btn btn-primary" href="{{ event.info }}" target="_blank">More Info / Buy Tickets</a>
+                                </div>
                             </div>
-                          </div>
                         </div>
-                      </div>
-      
-                {% if forloop.counter|divisibleby:3 or forloop.last %}
-                    </div> <!-- Close .row -->
-                  </div> <!-- Close .carousel-item -->
-                {% endif %}
-              {% endfor %}
-            </div> <!-- end inner carousel -->
-      
-            <!-- carousel controls -->
-            <!-- previous button -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#cardCarousel_{{ forloop.counter }}" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <!-- next button -->
-            <button class="carousel-control-next" type="button" data-bs-target="#cardCarousel_{{ forloop.counter }}" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-      
-          </div> <!-- end carousel -->
-        </div>
-      {% endfor %}
-      
-                
-       
+                    </div>
+
+            
+                {% endfor %}
+            
+            </div>
+
+        {% endfor %}
+        
         
     </div>
 </div>
