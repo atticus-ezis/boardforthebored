@@ -33,8 +33,9 @@ def get_events_by_type(events):
         groupby[event['class']].append(event) 
     return dict(groupby)
 
+
 # get JSON data
-def get_events_by_city(city):
+def get_events_by_city(city, **kwargs):
     events_dict = {}
 
     # connect to api
@@ -47,8 +48,18 @@ def get_events_by_city(city):
         'radius': '50',
         'unit': 'miles',
         'size': 10, 
-
+        'sort':'date,asc', 
     }
+
+    if 'class_name' in kwargs and kwargs['class_name']:
+        params['classificationName'] = kwargs['class_name']
+
+    if 'start_date' in kwargs and kwargs['start_date']:
+        params['startDateTime'] = params['start_date']
+    if 'end_date' in kwargs and kwargs['end_date']:
+        params['endDateTime'] = params['start_date']
+
+
 
     # return JSON data as dictionary
     response = requests.get(url, params=params)
@@ -62,6 +73,8 @@ def get_events_by_city(city):
 
             event_type = event['classifications'][0]
             event['class'] = event_type.get('segment', {}).get('name', 'Unlisted')
+            if event['class'] == "Undefined":
+                event['class'] = "Something Unique"
         
             images = event.get('images', [])
             if images:

@@ -10,13 +10,6 @@ body {
   font-family: "Playfair Display", serif;
 }
 
-.centered {
-  display: flex;
-  align-content: center;
-  justify-content: center;
-}
-
-
 .google-button {
   display: flex;
   align-content: center;
@@ -893,4 +886,13 @@ a:focus {
   object-fit: cover;        /* Ensure the image fills the container without distorting */
 }
 
+.width-75 {
+  width: 75%;
+  max-width: 1000px;
+}
 
+.centered {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}

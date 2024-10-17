@@ -4,11 +4,11 @@
 {% block content %}
 
 <!-- responsive width -->
-<div class="container my-4 d-flex flex-column justify-content-center align-items-center">
+<div class="container-fluid my-4 d-flex flex-column justify-content-center align-items-center">
     <!-- center children and stack vertically-->
-    <div style="max-width: 700px;">
+    <div class="width-75">
         <!-- Header -->
-        <h1 class="panel-title">Explore Events</h1>
+        <h1 class="centered">Explore Events</h1>
 
         <!-- searchbar form for city -->
         <div class="card w-100 rounded shadow-lg">
@@ -20,55 +20,57 @@
             </form>
 
         </div>
+    </div>    
 
-        <br>
+    <br>
 
         <!---->
                                         <!-- results -->
         <!---->
-       
-        {% for class, event_lists in grouped_events.items %}  <!-- define key + values from created tuple -->
-            <!-- Events subject title pushed left -->
-            <h1 class="panel-title my-4 me-auto">{{ class|title }}</h1>
-            <!-- results container -->
-            <div class="row flex-nowrap w-100" style="overflow-x: auto;"> 
-                {% for event in event_lists %}
-                    <div class="card my-5" style="max-width: 400px;">
-                        <!-- create event card -->
-                        <div class="card shadow">
-                            <!-- card image -->
-                            <img class="card-img-top fixed-ratio-img" src="{{ event.image_url }}" alt="{{ event.name }} image">
-                            <!-- card info -->
-                            <div class="card-body">
-                                <!-- title -->
-                                <h3 class="card-title">{{ event.name }}</h3>
-                                <!-- card body -->
-                                <div class="card-body w-100">
-                                <p class="card-text">Date:
-                                    <!-- display multiple dates and exclude ',' from last date -->
-                                    {% for date in event.dates %}
-                                    {{ date }}{% if not forloop.last %}, {% endif %}
-                                    {% endfor %}
-                                </p> 
-                                <p>ID: {{ event.id }}</p>
-                                <p class="card-text">Type: {{ event.class }}</p>
-                                <p class="card-text">Venue: {{ event.venue }}</p>
-                                <p class="card-text">City: {{ event.venue_city }}</p>
-                                <a class="btn btn-primary" href="{{ event.info }}" target="_blank">More Info / Buy Tickets</a>
-                                </div>
+   
+
+    {% for class, event_lists in grouped_events.items %}  <!-- define every event class + associated events from created tuple -->
+        <!-- Events subject title pushed left -->
+        <h1 class="me-auto">{{ class|title }}</h1>
+        
+        <!-- results container -->
+        <div class="row flex-nowrap w-100" style="overflow-x: auto;"> 
+            {% for event in event_lists %}
+                <div class="card mb-5" style="max-width: 400px;">
+                    <!-- create event card -->
+                    <div class="card shadow">
+                        <!-- card image -->
+                        <img class="card-img-top fixed-ratio-img" src="{{ event.image_url }}" alt="{{ event.name }} image">
+                        <!-- card info -->
+                        <div class="card-body">
+                            <!-- title -->
+                            <h3 class="card-title">{{ event.name }}</h3>
+                            <!-- card body -->
+                            <div class="card-body w-100">
+                            <p class="card-text">Date:
+                                <!-- display multiple dates and exclude ',' from last date -->
+                                {% for date in event.dates %}
+                                {{ date }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </p> 
+                            <p>ID: {{ event.id }}</p>
+                            <p class="card-text">Type: {{ event.class }}</p>
+                            <p class="card-text">Venue: {{ event.venue }}</p>
+                            <p class="card-text">City: {{ event.venue_city }}</p>
+                            <a class="btn btn-primary" href="{{ event.info }}" target="_blank">More Info / Buy Tickets</a>
                             </div>
                         </div>
                     </div>
+                </div>
 
-            
-                {% endfor %}
-            
-            </div>
+        
+            {% endfor %}
+        
+        </div>
 
-        {% endfor %}
+    {% endfor %}   
         
-        
-    </div>
+    
 </div>
 
 

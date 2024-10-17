@@ -1,6 +1,5 @@
- - align result cards horizontally
  - create clickable carousel
- - rank by date 
+
  - restrict api results to 3 events per class 
  - display all available classes
  - create filter for class
@@ -11,3 +10,23 @@
  - decorate 
  
 
+class:
+Miscellaneous - _embedded generes name
+Casino/Gaming
+Comedy
+Community/Civic
+Community/Cultural
+Public Skating
+Fairs & Festivals
+
+Sports
+
+Music
+
+Arts & Theatre
+
+Undefined 
+
+Film
+
+https://app.ticketmaster.com/discovery/v2/classifications.json?apikey=DH5CcGmxTaAHkBVAOZHtwXGnKhA8TNDr
