@@ -887,8 +887,8 @@ a:focus {
 }
 
 .width-75 {
-  width: 75%;
-  max-width: 1000px;
+  width: 75vw;
+  max-width: 500px;
 }
 
 .centered {
@@ -896,3 +896,13 @@ a:focus {
   align-content: center;
   justify-content: center;
 }
+
+
+@media (max-width: 576px) {
+  .width-75 {
+    width: 100vw;
+  }
+
+
+}
+

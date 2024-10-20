@@ -3,21 +3,42 @@
 
 {% block content %}
 
-<!-- responsive width -->
+<!-- responsive width, centered content in column -->
 <div class="container-fluid my-4 d-flex flex-column justify-content-center align-items-center">
-    <!-- center children and stack vertically-->
+    <!-- search container-->
     <div class="width-75">
         <!-- Header -->
         <h1 class="centered">Explore Events</h1>
 
         <!-- searchbar form for city -->
-        <div class="card w-100 rounded shadow-lg">
+        <div class="w-100">
             
-            <form method="POST" class="card-body d-flex p-4 justify-content-between" > <!-- search bar and button take up entire space-->
-                {% csrf_token %}
-                {{ form.city }} <!-- add .city to remove conflicting markup -->
-                <button class="btn btn-primary" type="submit">Search</button>
+            <form method="POST" class="p-4" > <!-- search bar and button take up entire space-->
+
+                <div name="input + button" class=" card-body d-flex justify-content-between">
+                    {% csrf_token %}
+                    {{ form.city }} <!-- add .city to remove conflicting markup -->
+                    
+                    <!-- search button -->
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+                <!-- dropdown -->
+                <div name="drop down filters" class="mt-2">
+                    <!-- class -->
+                    <select name="event_class" class="form-select mx-2" style="max-width: 100px;">
+                        <option value="" disabled selected>Type</option>
+                        <option value="">All</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Music">Music</option>
+                        <option value="Arts &amp; Theatre">Arts &amp; Theatre</option>
+                        <option value="Film">Film</option>
+                        <option value="Miscellaneous">Miscellaneous</option>
+                        <option value="Undefined">Something Unique</option>
+                    </select>
+                </div>
             </form>
+
+
 
         </div>
     </div>    
@@ -55,6 +76,7 @@
                             </p> 
                             <p>ID: {{ event.id }}</p>
                             <p class="card-text">Type: {{ event.class }}</p>
+                            <p class="card-text">Genre: {{ event.genre }}</p>
                             <p class="card-text">Venue: {{ event.venue }}</p>
                             <p class="card-text">City: {{ event.venue_city }}</p>
                             <a class="btn btn-primary" href="{{ event.info }}" target="_blank">More Info / Buy Tickets</a>
