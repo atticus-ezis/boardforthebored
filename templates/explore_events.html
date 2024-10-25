@@ -12,9 +12,7 @@
 
         <!-- searchbar form for city -->
         <div class="w-100">
-            
             <form method="POST" class="p-4" > <!-- search bar and button take up entire space-->
-
                 <div name="input + button" class=" card-body d-flex justify-content-between">
                     {% csrf_token %}
                     {{ form.city }} <!-- add .city to remove conflicting markup -->
