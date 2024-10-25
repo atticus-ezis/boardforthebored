@@ -77,19 +77,29 @@ def get_events_by_city(city, **kwargs):
     if response.status_code == 200:
         events = response.json().get('_embedded', {}).get('events', []) 
 
-        # clean data    
+        # iterate and select relevant data    
         for event in events:
 
+            # date
             event_date = event.get('dates', {}).get('start', {}).get('localDate', [])
-
+            # genre and classification
             if 'classifications' in event and event['classifications']:
                 event_type = event['classifications'][0]
-                event['class'] = event_type.get('segment', {}).get('name', 'Unlisted')
-                event['genre'] = event_type.get('type', {}).get('name', 'Unlisted')
-                if event['class'] == "Undefined":
-                    event['class'] = "Something Unique"
+                
+                if 'segment' in event_type:
+                    event_segment_name = event_type.get('segment', {}).get('name', 'Something Unique')
+                    if event_segment_name:
+                        event['class'] = event_segment_name
+                        if event_segment_name == "Undefined":
+                            event['class'] = "Something Unique"
+                    else:
+                         event['class'] = 'Something Unique' 
+                
+                if 'genre' in event_type:
+                    event['genre'] = event_type.get('genre', {}).get('name', 'Miscellaneous')
             else:
-                event['class'] = "Miscellaneous"
+                event['class'] = "Something Unique"
+                event['genre'] = 'Miscellaneous'
         
             images = event.get('images', [])
             if images:
