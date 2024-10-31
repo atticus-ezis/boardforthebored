@@ -13,11 +13,12 @@ from collections import defaultdict
 def search_city(request):
     events = []
     grouped_events = []
+    context = {"form":CitySearch}
 
     if request.method == 'POST':
         form = CitySearch(request.POST)
         if form.is_valid():
-            # get city ** required
+            # get city ** required **
             city = form.cleaned_data['city']
             # get class filters if any -- else None
             class_name = request.POST.get('event_class', None)
@@ -27,13 +28,13 @@ def search_city(request):
             grouped_events = get_events_by_type(events)
             # values passed 
             context = {
-                'form': form,
-                'grouped_events': grouped_events,
+                'form':form,
+                'grouped_events':grouped_events,
             }
     else:
         form = CitySearch()
         
-    return render(request, 'explore_events.html', {'form':form, 'grouped_events':grouped_events})
+    return render(request, 'explore_events.html', context)
 
 # group city results by class
 def get_events_by_type(events):
@@ -56,7 +57,7 @@ def get_events_by_city(city, **kwargs):
         'includeSpellcheck':'yes',
         'radius': '50',
         'unit': 'miles',
-        'size': 10, 
+        'size': 25, 
         'sort':'date,asc', 
     }
 
@@ -66,9 +67,9 @@ def get_events_by_city(city, **kwargs):
 
     # date param
     if 'start_date' in kwargs and kwargs['start_date']:
-        params['startDateTime'] = params['start_date']
+        params['startDateTime'] = kwargs['start_date']
     if 'end_date' in kwargs and kwargs['end_date']:
-        params['endDateTime'] = params['start_date']
+        params['endDateTime'] = kwargs['start_date']
 
 
 
@@ -77,47 +78,43 @@ def get_events_by_city(city, **kwargs):
     if response.status_code == 200:
         events = response.json().get('_embedded', {}).get('events', []) 
 
-        # iterate and select relevant data    
+        if not events:
+            print("No events found:", response.json())
+
+        # remove results that lack info link and type
         for event in events:
+            classification = event.get('classifications', [{}])
+            if classification:
+                segment_name = classification[0].get('segment', {}).get('name', None)
+
+            filtered_results = [
+                event for event in events 
+                if 'url' in event and segment_name
+            ]
+
+        # iterate and select relevant data    
+        for event in filtered_results[:10]:
 
             # date
             event_date = event.get('dates', {}).get('start', {}).get('localDate', [])
             # genre and classification
-            if 'classifications' in event and event['classifications']:
-                event_type = event['classifications'][0]
-                
-                if 'segment' in event_type:
-                    event_segment_name = event_type.get('segment', {}).get('name', 'Something Unique')
-                    if event_segment_name:
-                        event['class'] = event_segment_name
-                        if event_segment_name == "Undefined":
-                            event['class'] = "Something Unique"
-                    else:
-                         event['class'] = 'Something Unique' 
-                
-                if 'genre' in event_type:
-                    event['genre'] = event_type.get('genre', {}).get('name', 'Miscellaneous')
-            else:
-                event['class'] = "Something Unique"
-                event['genre'] = 'Miscellaneous'
-        
+            event_type = event['classifications'][0]
+            event['class'] = event_type.get('segment', {}).get('name')
+            event['genre'] = event_type.get('genre', {}).get('name', 'None')
+            # image
             images = event.get('images', [])
             if images:
                 event['image_url'] = images[0]['url']
-
+            # venue and city 
             if '_embedded' in event and 'venues' in event['_embedded']:
                 venue = event['_embedded']['venues'][0]
                 event['venue_name'] = venue.get('name', 'Unlisted')
                 event['venue_city'] = venue.get('city', {}).get('name', 'Unlisted')
-
+            # url 
             if 'url' not in event:
                 event['url'] = None
                 
-
-            
-
-            # append events to dict with unique names 
-
+            # avoid seperate cards for each date
             if event['name'] not in events_dict:
                 events_dict[event['name']] = {
                     'name':event['name'], 
@@ -136,7 +133,7 @@ def get_events_by_city(city, **kwargs):
             # Append the new date if it's not already in the list
                 if event_date and event_date not in events_dict[event['name']]['dates']:
                     events_dict[event['name']]['dates'].append(event_date)
-
+        # re structure data as list of dictionaries 
         event_list = [
              {
                 'name':event_data['name'], 
@@ -154,7 +151,9 @@ def get_events_by_city(city, **kwargs):
         ]
 
         return event_list 
-
+    else:
+        print(f"Failed to retrieve data: {response.status_code}")
+        print(response.text)
     return []
 
 
