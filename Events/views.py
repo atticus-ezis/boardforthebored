@@ -57,7 +57,7 @@ def get_events_by_city(city, **kwargs):
         'includeSpellcheck':'yes',
         'radius': '50',
         'unit': 'miles',
-        'size': 25, 
+        'size': 30, 
         'sort':'date,asc', 
     }
 
@@ -77,6 +77,7 @@ def get_events_by_city(city, **kwargs):
     response = requests.get(url, params=params)
     if response.status_code == 200:
         events = response.json().get('_embedded', {}).get('events', []) 
+        filtered_results = []
 
         if not events:
             print("No events found:", response.json())
@@ -86,14 +87,13 @@ def get_events_by_city(city, **kwargs):
             classification = event.get('classifications', [{}])
             if classification:
                 segment_name = classification[0].get('segment', {}).get('name', None)
-
-            filtered_results = [
-                event for event in events 
-                if 'url' in event and segment_name
-            ]
+                if segment_name and segment_name != "Undefined" and 'url' in event:
+                    filtered_results.append(event)
+                        
+    
 
         # iterate and select relevant data    
-        for event in filtered_results[:10]:
+        for event in filtered_results[:11]:
 
             # date
             event_date = event.get('dates', {}).get('start', {}).get('localDate', [])
