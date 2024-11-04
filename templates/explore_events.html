@@ -21,18 +21,37 @@
                     <button class="btn btn-primary" type="submit">Search</button>
                 </div>
                 <!-- dropdown -->
-                <div name="drop down filters" class="mt-2">
+                <div name="drop down filters" class="d-flex mt-2">
                     <!-- class -->
-                     <h2>Type</h2>
-                    <select name="event_class" class="form-select mx-2" style="max-width: 100px;">
-                        <option value="">All</option>
-                        <option value="Sports">Sports</option>
-                        <option value="Music">Music</option>
-                        <option value="Arts &amp; Theatre">Arts &amp; Theatre</option>
-                        <option value="Film">Film</option>
-                        <option value="Undefined">Something Unique</option>
-                    </select>
+                    <div class="flex-column me-5">
+                        <h2>Type</h2>
+                        <select name="event_class" class="form-select mx-2" style="max-width: 100px;">
+                            <option value="">All</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Music">Music</option>
+                            <option value="Arts &amp; Theatre">Arts &amp; Theatre</option>
+                            <option value="Film">Film</option>
+                            <option value="Undefined">Something Unique</option>
+                        </select>
+                    </div>
+                    <!-- Date -->
+                    <div class="flex-column">
+                        <h2>Date</h2>
+                        <div class="d-flex">
+                            <div class="me-2">
+                                <label for="start_date">Start Date</label>
+                                <input type="date" class="form-control" id="start_date" name="start_date">
+                            </div>
+                            <div>
+                                <label for="start_date">End Date</label>
+                                <input type="date" class="form-control" id="end_date" name="end_date">
+                            </div>
+                        </div>
+                    </div>
+
+                    
                 </div>
+
             </form>
 
 

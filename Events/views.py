@@ -22,8 +22,11 @@ def search_city(request):
             city = form.cleaned_data['city']
             # get class filters if any -- else None
             class_name = request.POST.get('event_class', None)
+            # get dates 
+            start_date = request.POST.get('start_date', None)
+            end_date = request.POST.get('end_date', None)
             # get events in city
-            events = get_events_by_city(city, class_name=class_name)
+            events = get_events_by_city(city, class_name=class_name, start_date=start_date, end_date=end_date)
             # organize events by type
             grouped_events = get_events_by_type(events)
             # values passed 
@@ -58,7 +61,9 @@ def get_events_by_city(city, **kwargs):
         'radius': '50',
         'unit': 'miles',
         'size': 30, 
-        'sort':'date,asc', 
+        'sort':'date,asc',
+        # 'startDateTime': '2024-11-20T00:00:00Z',
+        # 'endDateTime': '2024-11-21T00:00:00Z',
     }
 
     # class param 
