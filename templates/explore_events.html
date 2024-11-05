@@ -37,18 +37,23 @@
                     <!-- Date -->
                     <div class="flex-column">
                         <h2>Date</h2>
-                        <div class="d-flex">
-                            <div class="me-2">
-                                <label for="start_date">Start Date</label>
-                                <input type="date" class="form-control" id="start_date" name="start_date">
-                            </div>
-                            <div>
-                                <label for="start_date">End Date</label>
-                                <input type="date" class="form-control" id="end_date" name="end_date">
-                            </div>
-                        </div>
-                    </div>
 
+                        <button class="btn btn-secondary mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#dateInputs">
+                            New
+                        </button>
+                        
+                        <div id="dateInputs" class="collapse">
+                            <div class="d-flex">
+                                <div class="me-2">
+                                    <label for="start_date">Start Date</label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date">
+                                </div>
+                                <div>
+                                    <label for="start_date">End Date</label>
+                                    <input type="date" class="form-control" id="end_date" name="end_date">
+                                </div>
+                            </div>
+                    </div>
                     
                 </div>
 
