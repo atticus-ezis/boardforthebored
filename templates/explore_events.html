@@ -1,121 +1,139 @@
-{% extends "boot_base.html" %}
-{% load static %}
-
-{% block content %}
+{% extends "boot_base.html" %} {% load static %} {% block content %}
 
 <!-- responsive width, centered content in column -->
-<div class="container-fluid my-4 d-flex flex-column justify-content-center align-items-center">
-    <!-- search container-->
-    <div class="width-75">
-        <!-- Header -->
-        <h1 class="centered">Explore Events</h1>
+<div
+  class="container-fluid my-4 d-flex flex-column justify-content-center align-items-center"
+>
+  <!-- search container-->
+  <div class="width-75">
+    <!-- Header -->
+    <h1 class="centered">Explore Events</h1>
 
-        <!-- searchbar form for city -->
-        <div class="w-100">
-            <form method="POST" class="p-4" > <!-- search bar and button take up entire space-->
-                <div name="input + button" class=" card-body d-flex justify-content-between">
-                    {% csrf_token %}
-                    {{ form.city }} <!-- add .city to remove conflicting markup -->
-                    
-                    <!-- search button -->
-                    <button class="btn btn-primary" type="submit">Search</button>
-                </div>
-                <!-- dropdown -->
-                <div name="drop down filters" class="d-flex mt-2">
-                    <!-- class -->
-                    <div class="flex-column me-5">
-                        <h2>Type</h2>
-                        <select name="event_class" class="form-select mx-2" style="max-width: 100px;">
-                            <option value="">All</option>
-                            <option value="Sports">Sports</option>
-                            <option value="Music">Music</option>
-                            <option value="Arts &amp; Theatre">Arts &amp; Theatre</option>
-                            <option value="Film">Film</option>
-                            <option value="Undefined">Something Unique</option>
-                        </select>
-                    </div>
-                    <!-- Date -->
-                    <div class="flex-column">
-                        <h2>Date</h2>
+    <!-- searchbar form for city -->
+    <div class="w-100">
+      <form method="POST" class="p-4">
+        <!-- search bar and button take up entire space-->
+        <div
+          name="input + button"
+          class="card-body d-flex justify-content-between"
+        >
+          {% csrf_token %} {{ form.city }}
+          <!-- add .city to remove conflicting markup -->
 
-                        <button class="btn btn-secondary mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#dateInputs">
-                            New
-                        </button>
-                        
-                        <div id="dateInputs" class="collapse">
-                            <div class="d-flex">
-                                <div class="me-2">
-                                    <label for="start_date">Start Date</label>
-                                    <input type="date" class="form-control" id="start_date" name="start_date">
-                                </div>
-                                <div>
-                                    <label for="start_date">End Date</label>
-                                    <input type="date" class="form-control" id="end_date" name="end_date">
-                                </div>
-                            </div>
-                    </div>
-                    
-                </div>
-
-            </form>
-
-
-
+          <!-- search button -->
+          <button class="btn btn-primary" type="submit">Search</button>
         </div>
-    </div>    
+        <!-- dropdown -->
+        <div name="drop down filters" class="d-flex mt-2">
+          <!-- class -->
+          <div class="flex-column me-5">
+            <h2>Type</h2>
+            <select
+              name="event_class"
+              class="form-select mx-2"
+              style="max-width: 100px"
+            >
+              <option value="">All</option>
+              <option value="Sports">Sports</option>
+              <option value="Music">Music</option>
+              <option value="Arts &amp; Theatre">Arts &amp; Theatre</option>
+              <option value="Film">Film</option>
+              <option value="Undefined">Something Unique</option>
+            </select>
+          </div>
+          <!-- Date -->
+          <div class="flex-column">
+            <h2>Date</h2>
 
-    <br>
+            <button
+              class="btn btn-secondary mb-2"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#dateInputs"
+            >
+              Newest
+            </button>
 
-        <!---->
-                                        <!-- results -->
-        <!---->
-   
-
-    {% for class, event_lists in grouped_events.items %}  <!-- define every event class + associated events from created tuple -->
-        <!-- Events subject title pushed left -->
-        <h1 class="me-auto">{{ class|title }}</h1>
-        
-        <!-- results container -->
-        <div class="row flex-nowrap w-100" style="overflow-x: auto;"> 
-            {% for event in event_lists %}
-                <div class="card mb-5" style="max-width: 400px;">
-                    <!-- create event card -->
-                    <div class="card shadow">
-                        <!-- card image -->
-                        <img class="card-img-top fixed-ratio-img" src="{{ event.image_url }}" alt="{{ event.name }} image">
-                        <!-- card info -->
-                        <div class="card-body">
-                            <!-- title -->
-                            <h3 class="card-title">{{ event.name }}</h3>
-                            <!-- card body -->
-                            <div class="card-body w-100">
-                            <p class="card-text">Date:
-                                <!-- display multiple dates and exclude ',' from last date -->
-                                {% for date in event.dates %}
-                                {{ date }}{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </p> 
-                            <p>ID: {{ event.id }}</p>
-                            <p class="card-text">Type: {{ event.class }}</p>
-                            <p class="card-text">Genre: {{ event.genre }}</p>
-                            <p class="card-text">Venue: {{ event.venue }}</p>
-                            <p class="card-text">City: {{ event.venue_city }}</p>
-                            <a class="btn btn-primary" href="{{ event.info }}" target="_blank">More Info / Buy Tickets</a>
-                            </div>
-                        </div>
-                    </div>
+            <div id="dateInputs" class="collapse">
+              <div class="d-flex">
+                <div class="me-2">
+                  <label for="start_date">Start Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="start_date"
+                    name="start_date"
+                  />
                 </div>
-
-        
-            {% endfor %}
-        
+                <div>
+                  <label for="end_date">End Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="end_date"
+                    name="end_date"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </form>
+    </div>
+  </div>
 
-    {% endfor %}   
-        
-    
+  <br />
+
+  <!---->
+  <!-- results -->
+  <!---->
+
+  {% for class, event_lists in grouped_events.items %}
+  <!-- define every event class + associated events from created tuple -->
+  <!-- Events subject title pushed left -->
+  <h1 class="me-auto">{{ class|title }}</h1>
+
+  <!-- results container -->
+  <div class="row flex-nowrap w-100" style="overflow-x: auto">
+    {% for event in event_lists %}
+    <div class="card mb-5" style="max-width: 400px">
+      <!-- create event card -->
+      <div class="card shadow">
+        <!-- card image -->
+        <img
+          class="card-img-top fixed-ratio-img"
+          src="{{ event.image_url }}"
+          alt="{{ event.name }} image"
+        />
+        <!-- card info -->
+        <div class="card-body">
+          <!-- title -->
+          <h3 class="card-title">{{ event.name }}</h3>
+          <!-- card body -->
+          <div class="card-body w-100">
+            <p class="card-text">
+              Date:
+              <!-- display multiple dates and exclude ',' from last date -->
+              {% for date in event.dates %} {{ date }}{% if not forloop.last %},
+              {% endif %} {% endfor %}
+            </p>
+            <p>ID: {{ event.id }}</p>
+            <p class="card-text">Type: {{ event.class }}</p>
+            <p class="card-text">Genre: {{ event.genre }}</p>
+            <p class="card-text">Venue: {{ event.venue }}</p>
+            <p class="card-text">City: {{ event.venue_city }}</p>
+            <a class="btn btn-primary" href="{{ event.info }}" target="_blank"
+              >More Info / Buy Tickets</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% endfor %}
+  </div>
+
+  {% endfor %}
 </div>
-
-
 
 {% endblock content %}

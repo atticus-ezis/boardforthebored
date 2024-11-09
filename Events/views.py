@@ -20,11 +20,14 @@ def search_city(request):
         if form.is_valid():
             # get city ** required **
             city = form.cleaned_data['city']
-            # get class filters if any -- else None
+            # filters -- else None
             class_name = request.POST.get('event_class', None)
-            # get dates 
-            start_date = request.POST.get('start_date', None)
-            end_date = request.POST.get('end_date', None)
+            start_date = str(request.POST.get('start_date', None)) 
+            end_date = str(request.POST.get('end_date', None)) 
+            if start_date:
+                start_date = start_date + "T04:00:00Z"
+            if end_date:
+                end_date = end_date + "T04:00:00Z"
             # get events in city
             events = get_events_by_city(city, class_name=class_name, start_date=start_date, end_date=end_date)
             # organize events by type
@@ -62,8 +65,8 @@ def get_events_by_city(city, **kwargs):
         'unit': 'miles',
         'size': 30, 
         'sort':'date,asc',
-        # 'startDateTime': '2024-11-20T00:00:00Z',
-        # 'endDateTime': '2024-11-21T00:00:00Z',
+        # 'startDateTime': '2024-11-08T04:00:00Z',
+        # 'endDateTime': '2024-11-10T04:00:00Z',
     }
 
     # class param 
@@ -72,9 +75,11 @@ def get_events_by_city(city, **kwargs):
 
     # date param
     if 'start_date' in kwargs and kwargs['start_date']:
-        params['startDateTime'] = kwargs['start_date']
+        params['startDateTime'] = kwargs['start_date'] 
+        
     if 'end_date' in kwargs and kwargs['end_date']:
-        params['endDateTime'] = kwargs['start_date']
+        params['endDateTime'] = kwargs['end_date'] 
+     
 
 
 
@@ -91,21 +96,18 @@ def get_events_by_city(city, **kwargs):
         for event in events:
             classification = event.get('classifications', [{}])
             if classification:
-                segment_name = classification[0].get('segment', {}).get('name', None)
-                if segment_name and segment_name != "Undefined" and 'url' in event:
+                event["class"] = classification[0].get('segment', {}).get('name', None)
+                event["genre"] = classification[0].get('genre', {}).get('name', 'None')
+                if event["class"] and event["class"] != "Undefined" and 'url' in event:
                     filtered_results.append(event)
                         
     
 
         # iterate and select relevant data    
-        for event in filtered_results[:11]:
+        for event in filtered_results:
 
             # date
             event_date = event.get('dates', {}).get('start', {}).get('localDate', [])
-            # genre and classification
-            event_type = event['classifications'][0]
-            event['class'] = event_type.get('segment', {}).get('name')
-            event['genre'] = event_type.get('genre', {}).get('name', 'None')
             # image
             images = event.get('images', [])
             if images:
@@ -155,7 +157,7 @@ def get_events_by_city(city, **kwargs):
              for event_data in events_dict.values() 
         ]
 
-        return event_list 
+        return event_list  
     else:
         print(f"Failed to retrieve data: {response.status_code}")
         print(response.text)
