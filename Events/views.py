@@ -65,8 +65,6 @@ def get_events_by_city(city, **kwargs):
         'unit': 'miles',
         'size': 30, 
         'sort':'date,asc',
-        # 'startDateTime': '2024-11-08T04:00:00Z',
-        # 'endDateTime': '2024-11-10T04:00:00Z',
     }
 
     # class param 
