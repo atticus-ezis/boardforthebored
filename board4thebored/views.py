@@ -25,5 +25,3 @@ def city_autofill(request):
         return JsonResponse(suggestions, safe=False)
     return JsonResponse([], safe=False)
 
-
-"http://api.geonames.org/searchJSON?name_startsWith=den&maxRows=10&username=atty11928"

@@ -17,13 +17,16 @@ from collections import defaultdict
 def search_city(request):
     events = []
     grouped_events = []
-    context = {"form":CitySearch}
+    context = {}
 
     if request.method == 'POST':
-        form = CitySearch(request.POST)
-        if form.is_valid():
             # get city ** required **
-            city = form.cleaned_data['city']
+            city_input = request.POST.get('city')
+            if ',' in city_input:
+                city, stateCode = map(str.strip, city_input.split(',', 1))
+            else:
+                city, stateCode = city_input.strip(), None
+
             # filters -- else None
             class_name = request.POST.get('event_class', None)
             start_date = str(request.POST.get('start_date', None)) 
@@ -39,12 +42,11 @@ def search_city(request):
                 print(f"venue ID is {venue_id}")
             
             # get events 
-            events = get_events_by_city(city, class_name=class_name, start_date=start_date, end_date=end_date, venue_id=venue_id)
+            events = get_events_by_city(city, stateCode=stateCode, class_name=class_name, start_date=start_date, end_date=end_date, venue_id=venue_id)
             # organize events by type
             grouped_events = get_events_by_type(events)
             # values passed 
             context = {
-                'form':form,
                 'grouped_events':grouped_events,
             }
     else:
@@ -74,8 +76,11 @@ def get_events_by_city(city, **kwargs):
         'unit': 'miles',
         'size': 30, 
         'sort':'date,asc',
-        #'venueId': 'KovZpZAFaJeA',
     }
+
+    # state code
+    if 'stateCode' in kwargs and kwargs['stateCode']:
+        params['stateCode'] = kwargs['stateCode']
 
     # class param 
     if 'class_name' in kwargs and kwargs['class_name']:
