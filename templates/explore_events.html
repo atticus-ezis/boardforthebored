@@ -12,13 +12,14 @@
     <!-- searchbar form for city -->
     <div class="w-100">
       <form method="POST" class="p-4">
-        <!-- search bar and button take up entire space-->
+        {% csrf_token %}
         <div
           name="searchbar_n_button"
           class="card-body d-flex justify-content-between"
         >
           <div class="w-100 me-4">
             <input
+              name="city"
               type="text"
               id="city"
               class="form-control"
@@ -66,6 +67,7 @@
                                   "city"
                                 ).value = `${result.city}, ${result.state}`;
                                 resultsList.innerHTML = ""; // Clear the list after selection
+                                // add a form submit after selection?
                               };
                               resultsList.appendChild(li);
                             });
