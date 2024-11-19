@@ -6,4 +6,5 @@ app_name = 'events'
 urlpatterns = [
     path('explore/', search_city, name='explore'),
     
+    
 ]

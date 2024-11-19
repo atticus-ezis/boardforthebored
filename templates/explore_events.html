@@ -5,7 +5,7 @@
   class="container-fluid my-4 d-flex flex-column justify-content-center align-items-center"
 >
   <!-- search container-->
-  <div class="width-75">
+  <div name="event-search" class="width-75">
     <!-- Header -->
     <h1 class="centered">Explore Events</h1>
 
@@ -14,19 +14,88 @@
       <form method="POST" class="p-4">
         <!-- search bar and button take up entire space-->
         <div
-          name="input + button"
+          name="searchbar_n_button"
           class="card-body d-flex justify-content-between"
         >
-          {% csrf_token %} {{ form.city }}
+          <div class="w-100 me-4">
+            <input
+              type="text"
+              id="city"
+              class="form-control"
+              autocomplete="off"
+              placeholder="Enter City"
+            />
+
+            <ul
+              id="autocomplete-results"
+              class="list-group"
+              style="position: absolute"
+            ></ul>
+          </div>
+
+          <script>
+            document.addEventListener("DOMContentLoaded", function () {
+              let typingTimer;
+              const debounceDelay = 300; // Delay to prevent too many requests
+              const resultsList = document.getElementById(
+                "autocomplete-results"
+              );
+              document
+                .getElementById("city")
+                .addEventListener("input", function () {
+                  clearTimeout(typingTimer); // Clear previous timer
+                  const query = this.value;
+
+                  // Debounce: Only trigger the fetch if the user stops typing for a brief moment
+                  typingTimer = setTimeout(() => {
+                    if (query.length > 1) {
+                      // Only search if more than 1 character
+                      fetch(`/autocomplete/?city=${encodeURIComponent(query)}`)
+                        .then((response) => response.json())
+                        .then((data) => {
+                          resultsList.innerHTML = ""; // Clear previous results
+
+                          if (data) {
+                            // Display each result as an option
+                            data.forEach((result) => {
+                              const li = document.createElement("li");
+                              li.classList.add("list-group-item");
+                              li.textContent = `${result.city}, ${result.state}`;
+                              li.onclick = function () {
+                                document.getElementById(
+                                  "city"
+                                ).value = `${result.city}, ${result.state}`;
+                                resultsList.innerHTML = ""; // Clear the list after selection
+                              };
+                              resultsList.appendChild(li);
+                            });
+                          }
+                        })
+                        .catch((error) => {
+                          console.error(
+                            "Error fetching autocomplete results:",
+                            error
+                          );
+                        });
+                    } else {
+                      resultsList.innerHTML = ""; // Clear previous results
+                    }
+                  }, debounceDelay); // Delay fetch by debounce delay time
+                });
+            });
+          </script>
+
+          <!--{% csrf_token %} {{ form.city }}-->
           <!-- add .city to remove conflicting markup -->
 
           <!-- search button -->
           <button class="btn btn-primary" type="submit">Search</button>
         </div>
+
         <!-- dropdown -->
-        <div name="drop down filters" class="d-flex mt-2">
+        <div class="d-flex justify-content-between mt-2">
           <!-- class -->
-          <div class="flex-column me-5">
+          <div class="flex-column">
             <h2>Type</h2>
             <select
               name="event_class"
@@ -86,6 +155,8 @@
                 class="form-control"
                 id="venue_name_input"
                 name="venue_name_input"
+                maxlength="50"
+                style="max-width: 120px"
               />
             </div>
           </div>

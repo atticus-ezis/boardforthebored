@@ -1,32 +1,8 @@
- - create clickable carousel
+PUSH PRODUCTION
 
- - restrict api results to 3 events per class 
- - display all available classes
- - create filter for class
- - create filter for date range 
- - price filter 
- - age restriction filter
- - create generic search for event name
- - decorate 
- 
+1. Make event search page the landing page.
+2. Clean-up design 
+2. Add 21 + filter 
 
-class:
-Miscellaneous - _embedded generes name
-Casino/Gaming
-Comedy
-Community/Civic
-Community/Cultural
-Public Skating
-Fairs & Festivals
-
-Sports
-
-Music
-
-Arts & Theatre
-
-Undefined 
-
-Film
-
-https://app.ticketmaster.com/discovery/v2/classifications.json?apikey=DH5CcGmxTaAHkBVAOZHtwXGnKhA8TNDr
+Example JSON event
+https://app.ticketmaster.com/discovery/v2/events/Z7r9jZ1A78Max.json?apikey=DH5CcGmxTaAHkBVAOZHtwXGnKhA8TNDr

@@ -1,6 +1,7 @@
 import requests
 import os
 api_key = os.getenv('TICKETMASTER_API_KEY')
+username = os.getenv('GEONAMES_USERNAME')
 
 from django.shortcuts import render
 from .models import *
