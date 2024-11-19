@@ -16,12 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import index_view, test_index_view
+from .views import index_view, test_index_view, city_autofill
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('Users.urls')),
     path('events/', include('Events.urls')),
     path('', index_view),
+    path('autocomplete/', city_autofill),
     path('test/', test_index_view, name="home"),
 ]

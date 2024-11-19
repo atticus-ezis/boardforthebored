@@ -1,5 +1,7 @@
 import requests
 import os
+api_key = os.getenv('TICKETMASTER_API_KEY')
+username = os.getenv('GEONAMES_USERNAME')
 
 from django.shortcuts import render
 from .models import *
@@ -7,6 +9,8 @@ from .forms import CitySearch
 
 from django.http import JsonResponse
 from collections import defaultdict
+
+
 
 
 # pass city submit to api
@@ -28,8 +32,14 @@ def search_city(request):
                 start_date = start_date + "T04:00:00Z"
             if end_date:
                 end_date = end_date + "T04:00:00Z"
-            # get events in city
-            events = get_events_by_city(city, class_name=class_name, start_date=start_date, end_date=end_date)
+
+            venue_id = request.POST.get('venue_name_input', None)
+            if venue_id:
+                venue_id = get_venue_id(venue_id)
+                print(f"venue ID is {venue_id}")
+            
+            # get events 
+            events = get_events_by_city(city, class_name=class_name, start_date=start_date, end_date=end_date, venue_id=venue_id)
             # organize events by type
             grouped_events = get_events_by_type(events)
             # values passed 
@@ -55,7 +65,6 @@ def get_events_by_city(city, **kwargs):
     events_dict = {}
 
     # connect to api
-    api_key = os.getenv('TICKETMASTER_API_KEY')
     url = f"https://app.ticketmaster.com/discovery/v2/events.json"
     params = {
         'apikey': api_key,
@@ -65,6 +74,7 @@ def get_events_by_city(city, **kwargs):
         'unit': 'miles',
         'size': 30, 
         'sort':'date,asc',
+        #'venueId': 'KovZpZAFaJeA',
     }
 
     # class param 
@@ -77,6 +87,10 @@ def get_events_by_city(city, **kwargs):
         
     if 'end_date' in kwargs and kwargs['end_date']:
         params['endDateTime'] = kwargs['end_date'] 
+
+    # venue param 
+    if 'venue_id' in kwargs and kwargs['venue_id']:
+        params['venueId'] = kwargs['venue_id']
      
 
 
@@ -88,6 +102,7 @@ def get_events_by_city(city, **kwargs):
         filtered_results = []
 
         if not events:
+
             print("No events found:", response.json())
 
         # remove results that lack info link and type
@@ -160,6 +175,24 @@ def get_events_by_city(city, **kwargs):
         print(f"Failed to retrieve data: {response.status_code}")
         print(response.text)
     return []
+
+# find venue ID 
+
+def get_venue_id(venue_name):
+    url = f"https://app.ticketmaster.com/discovery/v2/venues.json"
+    params = {
+        'apikey': api_key,
+        'keyword': venue_name,
+    }
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        data = response.json().get('_embedded', {}).get('venues', [])
+        if data:
+            venue_id = data[0].get('id')
+            return venue_id
+    return None
+
+
 
 
 
