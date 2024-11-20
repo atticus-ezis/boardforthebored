@@ -28,7 +28,12 @@ def search_city(request):
                 city, stateCode = city_input.strip(), None
 
             # filters -- else None
-            class_name = request.POST.get('event_class', None)
+            class_name = request.POST.get('event_class', 'All')
+            if class_name == "All":
+                class_name = ['Sports', 'Music', 'Arts & Theatre', 'Film']
+            elif class_name == "Something Unique":
+                class_name = ['Undefined', 'Miscellaneous']
+
             start_date = str(request.POST.get('start_date', None)) 
             end_date = str(request.POST.get('end_date', None)) 
             if start_date:
@@ -74,7 +79,7 @@ def get_events_by_city(city, **kwargs):
         'includeSpellcheck':'yes',
         'radius': '50',
         'unit': 'miles',
-        'size': 30, 
+        'size': 25, 
         'sort':'date,asc',
     }
 
@@ -106,26 +111,19 @@ def get_events_by_city(city, **kwargs):
         events = response.json().get('_embedded', {}).get('events', []) 
         filtered_results = []
 
-        if not events:
-
-            print("No events found:", response.json())
-
-        # remove results that lack info link and type
-        for event in events:
-            classification = event.get('classifications', [{}])
-            
-            if classification:
-                event["class"] = classification[0].get('segment', {}).get('name', None)
-                event["genre"] = classification[0].get('genre', {}).get('name', 'None')
-                event["family_friendly"] = classification[0].get('family', None)
-                if event["class"] and event["class"] != "Undefined" and 'url' in event:
-                    filtered_results.append(event)
+        # remove results that lack info link 
+        for event in events:     
+            if 'url' in event:
+                filtered_results.append(event)
                         
     
 
         # iterate and select relevant data    
         for event in filtered_results:
-
+            # class 
+            classification = event.get('classifications', [{}])
+            event["class"] = classification[0].get('segment', {}).get('name', None)
+            event["genre"] = classification[0].get('genre', {}).get('name', 'None')
             # date
             event_date = event.get('dates', {}).get('start', {}).get('localDate', [])
             # image
@@ -140,6 +138,11 @@ def get_events_by_city(city, **kwargs):
             # url 
             if 'url' not in event:
                 event['url'] = None
+
+            if 'ageRestriction' in event:
+                event['ageRestrictions'] = event.get('ageRestrictions').get('legalAgeEnforced', None)
+            else: 
+                event['ageRestrictions'] = None
                 
             # avoid seperate cards for each date
             if event['name'] not in events_dict:
@@ -153,7 +156,7 @@ def get_events_by_city(city, **kwargs):
                     'id':event['id'],
                     'class':event['class'],
                     'genre':event['genre'],
-                    'family_friendly':event['family_friendly'],
+                    'ageRestrictions':event['ageRestrictions'],
                    
                 }
 
@@ -173,7 +176,7 @@ def get_events_by_city(city, **kwargs):
                 'id':event_data['id'],
                 'class':event_data['class'],
                 'genre':event_data['genre'],
-                'family_friendly':event_data['family_friendly'],
+                'ageRestrictions':event_data['ageRestrictions'],
              }
 
              for event_data in events_dict.values() 

@@ -39,7 +39,7 @@
                 <!-- sign in / logout -->
                 
 
-                    <div class="d-flex ml-auto" style="gap:20px;">
+                    <div class="d-flex me-1" style="gap:20px;">
                         {% if user.is_authenticated %}
                             <a class="nav-item text-decoration-none text-white" href="{% url 'users/profile' %}"><span>Hello, {{user.username}}</span></a>
                         {% else %}

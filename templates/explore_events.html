@@ -104,12 +104,12 @@
               class="form-select mx-2"
               style="max-width: 100px"
             >
-              <option value="">All</option>
+              <option value="All" selected>All</option>
               <option value="Sports">Sports</option>
               <option value="Music">Music</option>
               <option value="Arts &amp; Theatre">Arts &amp; Theatre</option>
               <option value="Film">Film</option>
-              <option value="Undefined">Something Unique</option>
+              <option value="Something Unique">Something Unique</option>
             </select>
           </div>
           <!-- Date -->
@@ -206,7 +206,9 @@
             <p>ID: {{ event.id }}</p>
             <p class="card-text">Type: {{ event.class }}</p>
             <p class="card-text">Genre: {{ event.genre }}</p>
-            <p class="card-text">Family Friendly?: {{event.family_friendly}}</p>
+            {% if event.ageRestrictions %}
+              <p class="card-text">Age Restricted? {{event.ageRestrictions}}</p>
+            {% endif %}
             <p class="card-text">Venue: {{ event.venue }}</p>
             <p class="card-text">City: {{ event.venue_city }}</p>
             <a class="btn btn-primary" href="{{ event.info }}" target="_blank"
