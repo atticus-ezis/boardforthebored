@@ -113,9 +113,11 @@ def get_events_by_city(city, **kwargs):
         # remove results that lack info link and type
         for event in events:
             classification = event.get('classifications', [{}])
+            
             if classification:
                 event["class"] = classification[0].get('segment', {}).get('name', None)
                 event["genre"] = classification[0].get('genre', {}).get('name', 'None')
+                event["family_friendly"] = classification[0].get('family', None)
                 if event["class"] and event["class"] != "Undefined" and 'url' in event:
                     filtered_results.append(event)
                         
@@ -151,6 +153,7 @@ def get_events_by_city(city, **kwargs):
                     'id':event['id'],
                     'class':event['class'],
                     'genre':event['genre'],
+                    'family_friendly':event['family_friendly'],
                    
                 }
 
@@ -169,7 +172,8 @@ def get_events_by_city(city, **kwargs):
                 'info':event_data['info'], 
                 'id':event_data['id'],
                 'class':event_data['class'],
-                'genre':event_data['genre']
+                'genre':event_data['genre'],
+                'family_friendly':event_data['family_friendly'],
              }
 
              for event_data in events_dict.values() 
