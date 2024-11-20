@@ -117,7 +117,7 @@
             <h2>Date</h2>
 
             <button
-              class="btn btn-secondary mb-2"
+              class="btn btn-primary mb-2"
               type="button"
               data-bs-toggle="collapse"
               data-bs-target="#dateInputs"
@@ -125,7 +125,7 @@
               Newest
             </button>
 
-            <div id="dateInputs" class="collapse">
+            <div id="dateInputs" class="collapse position-absolute">
               <div class="d-flex">
                 <div class="me-2">
                   <label for="start_date">Start Date</label>
@@ -206,6 +206,7 @@
             <p>ID: {{ event.id }}</p>
             <p class="card-text">Type: {{ event.class }}</p>
             <p class="card-text">Genre: {{ event.genre }}</p>
+            <p class="card-text">Family Friendly?: {{event.family_friendly}}</p>
             <p class="card-text">Venue: {{ event.venue }}</p>
             <p class="card-text">City: {{ event.venue_city }}</p>
             <a class="btn btn-primary" href="{{ event.info }}" target="_blank"
