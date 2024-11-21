@@ -1,11 +1,11 @@
-{% extends "boot_base.html" %} {% load static %} {% block content %}
+{% extends "boot_base.html" %} {% block content %}
 
 <!-- responsive width, centered content in column -->
 <div
   class="container-fluid my-4 d-flex flex-column justify-content-center align-items-center"
 >
   <!-- search container-->
-  <div name="event-search" class="width-75">
+  <div name="event-search" class="width-75 card p-3 shadow">
     <!-- Header -->
     <h1 class="centered">Explore Events</h1>
 
@@ -32,60 +32,8 @@
               class="list-group"
               style="position: absolute"
             ></ul>
+            <!-- see Javascript -->
           </div>
-
-          <script>
-            document.addEventListener("DOMContentLoaded", function () {
-              let typingTimer;
-              const debounceDelay = 300; // Delay to prevent too many requests
-              const resultsList = document.getElementById(
-                "autocomplete-results"
-              );
-              document
-                .getElementById("city")
-                .addEventListener("input", function () {
-                  clearTimeout(typingTimer); // Clear previous timer
-                  const query = this.value;
-
-                  // Debounce: Only trigger the fetch if the user stops typing for a brief moment
-                  typingTimer = setTimeout(() => {
-                    if (query.length > 1) {
-                      // Only search if more than 1 character
-                      fetch(`/autocomplete/?city=${encodeURIComponent(query)}`)
-                        .then((response) => response.json())
-                        .then((data) => {
-                          resultsList.innerHTML = ""; // Clear previous results
-
-                          if (data) {
-                            // Display each result as an option
-                            data.forEach((result) => {
-                              const li = document.createElement("li");
-                              li.classList.add("list-group-item");
-                              li.textContent = `${result.city}, ${result.state}`;
-                              li.onclick = function () {
-                                document.getElementById(
-                                  "city"
-                                ).value = `${result.city}, ${result.state}`;
-                                resultsList.innerHTML = ""; // Clear the list after selection
-                                // add a form submit after selection?
-                              };
-                              resultsList.appendChild(li);
-                            });
-                          }
-                        })
-                        .catch((error) => {
-                          console.error(
-                            "Error fetching autocomplete results:",
-                            error
-                          );
-                        });
-                    } else {
-                      resultsList.innerHTML = ""; // Clear previous results
-                    }
-                  }, debounceDelay); // Delay fetch by debounce delay time
-                });
-            });
-          </script>
 
           <!--{% csrf_token %} {{ form.city }}-->
           <!-- add .city to remove conflicting markup -->
@@ -160,7 +108,21 @@
                 maxlength="50"
                 style="max-width: 120px"
               />
+              <select
+                name="venue_name_input"
+                id="dropdown_selection"
+                class="form-select mx-2 flex-column"
+                style="width:20px;"
+                onchange="updateInput()"
+              >
+                {% for venue in venues %}
+                <option value="{{venue}}">{{venue}}</option>
+                {% endfor %}
+              </select>
+              <!-- see Javascript -->
+    
             </div>
+            <!-- list of venues -->
           </div>
           <!-- end venue -->
         </div>
@@ -176,13 +138,11 @@
 
   {% for class, event_lists in grouped_events.items %}
   <!-- define every event class + associated events from created tuple -->
-  <!-- Events subject title pushed left -->
   <h1 class="me-auto">{{ class|title }}</h1>
-
   <!-- results container -->
   <div class="row flex-nowrap w-100" style="overflow-x: auto">
     {% for event in event_lists %}
-    <div class="card mb-5" style="max-width: 400px">
+    <div class="mb-5" style="max-width: 400px">
       <!-- create event card -->
       <div class="card shadow">
         <!-- card image -->
@@ -203,14 +163,11 @@
               {% for date in event.dates %} {{ date }}{% if not forloop.last %},
               {% endif %} {% endfor %}
             </p>
-            <p>ID: {{ event.id }}</p>
-            <p class="card-text">Type: {{ event.class }}</p>
             <p class="card-text">Genre: {{ event.genre }}</p>
             {% if event.ageRestrictions %}
-              <p class="card-text">Age Restricted? {{event.ageRestrictions}}</p>
+            <p class="card-text">Age Restricted? {{event.ageRestrictions}}</p>
             {% endif %}
             <p class="card-text">Venue: {{ event.venue }}</p>
-            <p class="card-text">City: {{ event.venue_city }}</p>
             <a class="btn btn-primary" href="{{ event.info }}" target="_blank"
               >More Info / Buy Tickets</a
             >

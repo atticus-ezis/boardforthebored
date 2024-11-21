@@ -21,9 +21,8 @@ from Events.views import search_city
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
     path('users/', include('Users.urls')),
-    path('events/', include('Events.urls')),
     path('', search_city, name="home"),
     path('autocomplete/', city_autofill),
-    path('test/', test_index_view),
 ]

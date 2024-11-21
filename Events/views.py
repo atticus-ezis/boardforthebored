@@ -5,7 +5,6 @@ username = os.getenv('GEONAMES_USERNAME')
 
 from django.shortcuts import render
 from .models import *
-from .forms import CitySearch
 
 from django.http import JsonResponse
 from collections import defaultdict
@@ -48,14 +47,19 @@ def search_city(request):
             
             # get events 
             events = get_events_by_city(city, stateCode=stateCode, class_name=class_name, start_date=start_date, end_date=end_date, venue_id=venue_id)
+            # create list of event venues 
+            venues = []
+            for event in events:
+                if event['venue'] not in venues:
+                    venues.append(event['venue'])
+
             # organize events by type
             grouped_events = get_events_by_type(events)
             # values passed 
             context = {
                 'grouped_events':grouped_events,
+                'venues':venues,
             }
-    else:
-        form = CitySearch()
         
     return render(request, 'explore_events.html', context)
 
@@ -102,9 +106,6 @@ def get_events_by_city(city, **kwargs):
     if 'venue_id' in kwargs and kwargs['venue_id']:
         params['venueId'] = kwargs['venue_id']
      
-
-
-
     # return JSON data as dictionary
     response = requests.get(url, params=params)
     if response.status_code == 200:
@@ -116,8 +117,6 @@ def get_events_by_city(city, **kwargs):
             if 'url' in event:
                 filtered_results.append(event)
                         
-    
-
         # iterate and select relevant data    
         for event in filtered_results:
             # class 
