@@ -122,5 +122,37 @@
 
 }
 
+.google-button {
+  display: flex;
+  align-items: center; /* Vertically center logo and text */
+  justify-content: center; /* Horizontally center content */
+  gap: 10px; /* Space between logo and text */
+  padding: 10px 15px; /* Add padding for better click area */
+  border: 1px solid #ddd; /* Add a light border */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #fff; /* White background */
+  color: #444; /* Text color */
+  font-size: 16px; /* Adjust font size */
+  text-decoration: none; /* Remove underline from link */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: all 0.3s ease; /* Smooth hover effects */
+}
+
+.google-button:hover {
+  background-color: #f7f7f7; /* Light gray on hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+.google-button img {
+  height: 20px; /* Adjust logo size */
+}
+
+.google-button p {
+  margin: 0; /* Remove default margin on paragraph */
+  font-weight: bold; /* Make the text bold */
+}
+
+
 
 

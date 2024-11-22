@@ -46,7 +46,7 @@ def search_city(request):
                 print(f"venue ID is {venue_id}")
             
             # get events 
-            events = get_events_by_city(city, stateCode=stateCode, class_name=class_name, start_date=start_date, end_date=end_date, venue_id=venue_id)
+            events = get_events_by_city(request, city, stateCode=stateCode, class_name=class_name, start_date=start_date, end_date=end_date, venue_id=venue_id)
             # create list of event venues 
             venues = []
             for event in events:
@@ -72,7 +72,7 @@ def get_events_by_type(events):
 
 
 # get JSON data
-def get_events_by_city(city, **kwargs):
+def get_events_by_city(request, city, **kwargs):
     events_dict = {}
 
     # connect to api
@@ -183,10 +183,9 @@ def get_events_by_city(city, **kwargs):
 
         return event_list  
     else:
-        print(f"Failed to retrieve data: {response.status_code}")
-        print(response.text)
-    return []
-
+        error_message = response.status_code
+        return render(request, 'explore_events.html', {'error':error_message})
+    
 # find venue ID 
 
 def get_venue_id(venue_name):
