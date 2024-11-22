@@ -17,7 +17,6 @@ def city_autofill(request):
         geonames_url = f"http://api.geonames.org/searchJSON?name_startsWith={city}&country={country}&maxRows=10&username={username}"
         response = requests.get(geonames_url)
         data = response.json().get('geonames', [])
-        us_data = [item for item in data if item.get('countryCode') == 'US']
         suggestions = [
             {"city": item['name'], "state": item.get('adminCode1', '')}
             for item in data
