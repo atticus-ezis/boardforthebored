@@ -16,7 +16,10 @@ from collections import defaultdict
 def search_city(request):
     events = []
     grouped_events = []
-    context = {}
+    no_results = False
+    error = None  # Default value for error
+    context = {'no_results': no_results, 'error': error}
+
 
     if request.method == 'POST':
             # get city ** required **
@@ -46,21 +49,36 @@ def search_city(request):
                 print(f"venue ID is {venue_id}")
             
             # get events 
-            events = get_events_by_city(request, city, stateCode=stateCode, class_name=class_name, start_date=start_date, end_date=end_date, venue_id=venue_id)
-            # create list of event venues 
-            venues = []
-            for event in events:
-                if event['venue'] not in venues:
-                    venues.append(event['venue'])
+            events = get_events_by_city(city, stateCode=stateCode, class_name=class_name, start_date=start_date, end_date=end_date, venue_id=venue_id)
 
-            # organize events by type
-            grouped_events = get_events_by_type(events)
-            # values passed 
+            error = None
+            no_results = False
+            grouped_events = None
+            venues = None
+
+            if "error" in events:
+                error = events['error']
+            else:
+                if not events:
+                    no_results = True
+                else:
+                    # Create list of event venues
+                    venues = []
+                    for event in events:
+                        if event['venue'] not in venues:
+                            venues.append(event['venue'])
+
+                    # Organize events by type
+                    grouped_events = get_events_by_type(events)
+
+            # Values passed to the context
             context = {
-                'grouped_events':grouped_events,
-                'venues':venues,
+                'grouped_events': grouped_events,
+                'venues': venues,
+                'no_results': no_results,
+                'error': error,
             }
-        
+
     return render(request, 'explore_events.html', context)
 
 # group city results by class
@@ -72,7 +90,7 @@ def get_events_by_type(events):
 
 
 # get JSON data
-def get_events_by_city(request, city, **kwargs):
+def get_events_by_city(city, **kwargs):
     events_dict = {}
 
     # connect to api
@@ -81,9 +99,9 @@ def get_events_by_city(request, city, **kwargs):
         'apikey': api_key,
         'city': city, 
         'includeSpellcheck':'yes',
-        'radius': '50',
+        'radius': '100',
         'unit': 'miles',
-        'size': 25, 
+        'size': 30, 
         'sort':'date,asc',
     }
 
@@ -118,7 +136,7 @@ def get_events_by_city(request, city, **kwargs):
                 filtered_results.append(event)
                         
         # iterate and select relevant data    
-        for event in filtered_results:
+        for event in filtered_results[:20]:
             # class 
             classification = event.get('classifications', [{}])
             event["class"] = classification[0].get('segment', {}).get('name', None)
@@ -183,8 +201,7 @@ def get_events_by_city(request, city, **kwargs):
 
         return event_list  
     else:
-        error_message = response.status_code
-        return render(request, 'explore_events.html', {'error':error_message})
+      return {'error': response.status_code}
     
 # find venue ID 
 

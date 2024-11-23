@@ -134,7 +134,7 @@
   <!---->
   <!-- results -->
   <!---->
-  {% for class, event_lists in grouped_events.items %}
+  {% if grouped_events %} {% for class, event_lists in grouped_events.items %}
   <!-- define every event class + associated events from created tuple -->
   <h1 class="me-auto">{{ class|title }}</h1>
   <!-- results container -->
@@ -176,10 +176,10 @@
 
     {% endfor %}
   </div>
-  {% endfor %}
+  {% endfor %} {% endif %}
 
   <!-- Error Msgs -->
-  {% if not grouped_events and not error %}
+  {% if no_results == True %}
   <div name="no_result" class="width-75 d-flex flex-column">
     <h5>No results.... But don't give up!</h5>
     <h5 style="font-size: 18px">You can try:</h5>
